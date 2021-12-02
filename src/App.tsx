@@ -29,7 +29,7 @@ class App extends React.Component<{}, AppState> {
         <div className="game-container">
           <BombsCounter numOfBombsLeft={this.state.numOfBombsLeft} />
           <Game
-            gameSize={30}
+            gameSize={20}
             numOfBombs={this.state.numOfBombsLeft}
             setNumOfBombsLeft={this.setNumOfBombsLeft.bind(this)}
           />

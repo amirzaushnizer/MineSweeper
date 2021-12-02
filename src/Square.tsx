@@ -34,7 +34,7 @@ class Square extends Component<SquareProps, SquareState> {
   displayHidden = () => {
     switch (this.state.markState) {
       case MarkStates.Marked:
-        return "🏴";
+        return "🏳️‍⚧️";
       case MarkStates.QuestionMark:
         return "?";
       default:
