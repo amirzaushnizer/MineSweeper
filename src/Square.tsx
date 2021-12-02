@@ -1,8 +1,12 @@
 import React, { Component } from "react";
 
-class Square extends Component {
+interface SquareProps {
+  isBomb: boolean;
+}
+
+class Square extends Component<SquareProps> {
   render() {
-    return <button className="square" />;
+    return <button className="square">{this.props.isBomb ? "X" : ""}</button>;
   }
 }
 

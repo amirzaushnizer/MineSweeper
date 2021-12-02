@@ -11,7 +11,7 @@ class App extends React.Component {
         <h1>MineSweeper Game</h1>
         <div className="game-container">
           <BombsCounter numOfBombsLeft={10} />
-          <Game />
+          <Game gameSize={30} numOfBombs={10} />
           <Timer />
         </div>
       </div>
