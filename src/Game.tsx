@@ -4,14 +4,20 @@ import Square from "./Square";
 interface GameProps {
   gameSize: number;
   numOfBombs: number;
+  setNumOfBombsLeft: Function;
 }
 
-class Game extends Component<GameProps> {
+interface GameState {
+  openSquares: boolean[][];
+}
+
+class Game extends Component<GameProps, GameState> {
   private readonly bombsMatrix: boolean[][];
 
   constructor(props: GameProps) {
     super(props);
     this.bombsMatrix = this.initBombsMatrix();
+    this.state = { openSquares: init2DBoolMatrix(this.props.gameSize) };
   }
 
   getSquareNeighbors = (row: number, col: number) => {
@@ -42,12 +48,7 @@ class Game extends Component<GameProps> {
   };
 
   initBombsMatrix = () => {
-    const bombsMatrix = Array(this.props.gameSize)
-      .fill(false)
-      .map(() => {
-        return Array(this.props.gameSize).fill(false);
-      });
-
+    const bombsMatrix = init2DBoolMatrix(this.props.gameSize);
     for (let i = 0; i < this.props.numOfBombs; i++) {
       const row = Math.floor(Math.random() * this.props.gameSize);
       const column = Math.floor(Math.random() * this.props.gameSize);
@@ -56,8 +57,6 @@ class Game extends Component<GameProps> {
 
     return bombsMatrix;
   };
-
-  componentDidMount() {}
 
   render() {
     return (
@@ -70,6 +69,8 @@ class Game extends Component<GameProps> {
                   key={j}
                   isBomb={this.bombsMatrix[i][j]}
                   numOfAdjacentBombs={this.calcNumOfAdjacentBombs(i, j)}
+                  isOpen={this.state.openSquares[i][j]}
+                  setNumOfBombsLeft={this.props.setNumOfBombsLeft}
                 />
               );
             })}
@@ -79,5 +80,13 @@ class Game extends Component<GameProps> {
     );
   }
 }
+
+const init2DBoolMatrix = (size: number) => {
+  return Array(size)
+    .fill(false)
+    .map(() => {
+      return Array(size).fill(false);
+    });
+};
 
 export default Game;

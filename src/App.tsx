@@ -4,14 +4,35 @@ import BombsCounter from "./BombsCounter";
 import Timer from "./Timer";
 import Game from "./Game";
 
-class App extends React.Component {
+interface AppState {
+  numOfBombsLeft: number;
+}
+
+class App extends React.Component<{}, AppState> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      numOfBombsLeft: 15,
+    };
+  }
+
+  setNumOfBombsLeft = (numToAdd: number) => {
+    this.setState((prevState) => {
+      return { numOfBombsLeft: prevState.numOfBombsLeft + numToAdd };
+    });
+  };
+
   render() {
     return (
       <div className="app-container">
         <h1>MineSweeper Game</h1>
         <div className="game-container">
-          <BombsCounter numOfBombsLeft={10} />
-          <Game gameSize={30} numOfBombs={10} />
+          <BombsCounter numOfBombsLeft={this.state.numOfBombsLeft} />
+          <Game
+            gameSize={30}
+            numOfBombs={this.state.numOfBombsLeft}
+            setNumOfBombsLeft={this.setNumOfBombsLeft.bind(this)}
+          />
           <Timer />
         </div>
       </div>
