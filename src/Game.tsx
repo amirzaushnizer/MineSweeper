@@ -30,9 +30,15 @@ class Game extends Component<GameProps, GameState> {
   initBombsMatrix = () => {
     const bombsMatrix = init2DBoolMatrix(this.props.gameSize);
     for (let i = 0; i < this.props.numOfBombs; i++) {
-      const row = Math.floor(Math.random() * this.props.gameSize);
-      const column = Math.floor(Math.random() * this.props.gameSize);
-      bombsMatrix[row][column] = true;
+      let bombInit = false;
+      while (!bombInit) {
+        const row = Math.floor(Math.random() * this.props.gameSize);
+        const column = Math.floor(Math.random() * this.props.gameSize);
+        if (!bombsMatrix[row][column]) {
+          bombsMatrix[row][column] = true;
+          bombInit = true;
+        }
+      }
     }
 
     return bombsMatrix;
