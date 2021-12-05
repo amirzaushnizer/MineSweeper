@@ -1,13 +1,15 @@
-export const init2DBoolMatrix = (size: number) => {
-  return Array(size)
-    .fill(false)
-    .map(() => {
-      return Array(size).fill(false);
-    });
+export const initOpenSquaresMatrix = (gameSize: number) => {
+  return Array(gameSize)
+    .fill(-1)
+    .map(() => Array(gameSize).fill(-1));
 };
 
 export const initBombsMatrix = (gameSize: number, numOfBombs: number) => {
-  const bombsMatrix = init2DBoolMatrix(gameSize);
+  const bombsMatrix = Array(gameSize)
+    .fill(false)
+    .map(() => {
+      return Array(gameSize).fill(false);
+    });
   for (let i = 0; i < numOfBombs; i++) {
     let bombInit = false;
     while (!bombInit) {

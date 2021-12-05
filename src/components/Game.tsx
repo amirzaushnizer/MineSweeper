@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import Square from "./Square";
 import {
   getSquareNeighbors,
-  init2DBoolMatrix,
   initBombsMatrix,
+  initOpenSquaresMatrix,
 } from "../utils";
 
 interface GameProps {
@@ -13,7 +13,7 @@ interface GameProps {
 }
 
 interface GameState {
-  openSquares: boolean[][];
+  openSquares: number[][];
   bombSquares: boolean[][];
 }
 
@@ -22,11 +22,12 @@ class Game extends Component<GameProps, GameState> {
     super(props);
 
     this.state = {
-      openSquares: init2DBoolMatrix(props.gameSize),
+      openSquares: initOpenSquaresMatrix(props.gameSize),
       bombSquares: initBombsMatrix(props.gameSize, props.numOfBombs),
     };
   }
 
+  // This method will be used later on.
   calcNumOfAdjacentBombs = (row: number, col: number) => {
     const { gameSize } = this.props;
     const neighbors = getSquareNeighbors(row, col, gameSize);
@@ -37,7 +38,8 @@ class Game extends Component<GameProps, GameState> {
 
   render() {
     const { gameSize, setNumOfBombsLeft } = this.props;
-    const { openSquares, bombSquares } = this.state;
+    const { bombSquares, openSquares } = this.state;
+
     return (
       <div className="grid-container">
         {Array.from(Array(gameSize).keys()).map((i) => (
@@ -47,8 +49,7 @@ class Game extends Component<GameProps, GameState> {
                 <Square
                   key={j}
                   isBomb={bombSquares[i][j]}
-                  numOfAdjacentBombs={this.calcNumOfAdjacentBombs(i, j)}
-                  isOpen={openSquares[i][j]}
+                  numOfAdjacentBombs={openSquares[i][j]}
                   setNumOfBombsLeft={setNumOfBombsLeft}
                 />
               );

@@ -3,7 +3,6 @@ import React, { Component } from "react";
 interface SquareProps {
   isBomb: boolean;
   numOfAdjacentBombs: number;
-  isOpen: boolean;
   setNumOfBombsLeft: Function;
 }
 
@@ -57,7 +56,8 @@ class Square extends Component<SquareProps, SquareState> {
   };
 
   render() {
-    const { isOpen } = this.props;
+    const { numOfAdjacentBombs } = this.props;
+    const isOpen = numOfAdjacentBombs > -1;
     return (
       <button
         className="square"
