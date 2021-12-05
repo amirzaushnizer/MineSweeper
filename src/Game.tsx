@@ -14,28 +14,8 @@ class Game extends Component<GameProps> {
     this.bombsMatrix = this.initBombsMatrix();
   }
 
-  getSquareNeighbors = (row: number, col: number) => {
-    const neighbors: number[][] = [];
-    for (let i = row - 1; i <= row + 1; i++) {
-      for (let j = col - 1; j <= col + 1; j++) {
-        if (!(i === row && j === col)) {
-          if (
-            i > -1 &&
-            j > -1 &&
-            i < this.props.gameSize &&
-            j < this.props.gameSize
-          ) {
-            neighbors.push([i, j]);
-          }
-        }
-      }
-    }
-
-    return neighbors;
-  };
-
   calcNumOfAdjacentBombs = (row: number, col: number) => {
-    const neighbors = this.getSquareNeighbors(row, col);
+    const neighbors = getSquareNeighbors(row, col, this.props.gameSize);
     return neighbors.filter(
       (neighbor) => this.bombsMatrix[neighbor[0]][neighbor[1]]
     ).length;
@@ -57,8 +37,6 @@ class Game extends Component<GameProps> {
     return bombsMatrix;
   };
 
-  componentDidMount() {}
-
   render() {
     return (
       <div className="grid-container">
@@ -79,5 +57,20 @@ class Game extends Component<GameProps> {
     );
   }
 }
+
+//fun with indexes
+const getSquareNeighbors = (row: number, col: number, gridSize: number) => {
+  const neighbors: number[][] = [];
+  for (let i = row - 1; i <= row + 1; i++) {
+    for (let j = col - 1; j <= col + 1; j++) {
+      if (!(i === row && j === col)) {
+        if (i > -1 && j > -1 && i < gridSize && j < gridSize) {
+          neighbors.push([i, j]);
+        }
+      }
+    }
+  }
+  return neighbors;
+};
 
 export default Game;
