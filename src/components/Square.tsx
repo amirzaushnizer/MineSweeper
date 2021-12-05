@@ -24,15 +24,13 @@ class Square extends Component<SquareProps, SquareState> {
   }
 
   displayOpen = () => {
-    return this.props.isBomb
-      ? "X"
-      : this.props.numOfAdjacentBombs > 0
-      ? this.props.numOfAdjacentBombs
-      : "";
+    const { isBomb, numOfAdjacentBombs } = this.props;
+    return isBomb ? "X" : numOfAdjacentBombs > 0 ? numOfAdjacentBombs : "";
   };
 
   displayHidden = () => {
-    switch (this.state.markState) {
+    const { markState } = this.state;
+    switch (markState) {
       case MarkStates.Marked:
         return "🏳️‍⚧️";
       case MarkStates.QuestionMark:
@@ -43,25 +41,29 @@ class Square extends Component<SquareProps, SquareState> {
   };
 
   handleRightClick = (e: React.MouseEvent) => {
+    const { setNumOfBombsLeft } = this.props;
+    const { markState } = this.state;
+
     e.preventDefault();
-    if (this.state.markState === MarkStates.Unmarked) {
-      this.props.setNumOfBombsLeft(-1);
+    if (markState === MarkStates.Unmarked) {
+      setNumOfBombsLeft(-1);
     }
-    if (this.state.markState === MarkStates.Marked) {
-      this.props.setNumOfBombsLeft(1);
+    if (markState === MarkStates.Marked) {
+      setNumOfBombsLeft(1);
     }
     this.setState((prevState: SquareState) => {
-      return { markState: (prevState.markState + 1) % 3 }; //Hard core discrete math
+      return { markState: (prevState.markState + 1) % 3 }; //Hardcore discrete math
     });
   };
 
   render() {
+    const { isOpen } = this.props;
     return (
       <button
         className="square"
         onContextMenu={this.handleRightClick.bind(this)}
       >
-        {this.props.isOpen ? this.displayOpen() : this.displayHidden()}
+        {isOpen ? this.displayOpen() : this.displayHidden()}
       </button>
     );
   }

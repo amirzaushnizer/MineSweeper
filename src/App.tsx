@@ -1,11 +1,12 @@
 import React from "react";
 import "./App.css";
-import BombsCounter from "./BombsCounter";
-import Timer from "./Timer";
-import Game from "./Game";
+import BombsCounter from "./components/BombsCounter";
+import Timer from "./components/Timer";
+import Game from "./components/Game";
 
 interface AppState {
   numOfBombsLeft: number;
+  gameSize: number;
 }
 
 class App extends React.Component<{}, AppState> {
@@ -13,6 +14,7 @@ class App extends React.Component<{}, AppState> {
     super(props);
     this.state = {
       numOfBombsLeft: 15,
+      gameSize: 20,
     };
   }
 
@@ -23,14 +25,16 @@ class App extends React.Component<{}, AppState> {
   };
 
   render() {
+    const { numOfBombsLeft, gameSize } = this.state;
+
     return (
       <div className="app-container">
         <h1>MineSweeper Game</h1>
         <div className="game-container">
-          <BombsCounter numOfBombsLeft={this.state.numOfBombsLeft} />
+          <BombsCounter numOfBombsLeft={numOfBombsLeft} />
           <Game
-            gameSize={20}
-            numOfBombs={this.state.numOfBombsLeft}
+            gameSize={gameSize}
+            numOfBombs={numOfBombsLeft}
             setNumOfBombsLeft={this.setNumOfBombsLeft.bind(this)}
           />
           <Timer />
