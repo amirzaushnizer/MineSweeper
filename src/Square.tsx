@@ -7,13 +7,10 @@ interface SquareProps {
 
 class Square extends Component<SquareProps> {
   render() {
+    const { isBomb, numOfAdjacentBombs } = this.props;
     return (
       <button className="square">
-        {this.props.isBomb
-          ? "X"
-          : this.props.numOfAdjacentBombs > 0
-          ? this.props.numOfAdjacentBombs
-          : ""}
+        {isBomb ? "X" : numOfAdjacentBombs > 0 ? numOfAdjacentBombs : ""}
       </button>
     );
   }
