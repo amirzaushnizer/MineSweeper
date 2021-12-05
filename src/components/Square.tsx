@@ -5,6 +5,8 @@ interface SquareProps {
   numOfAdjacentBombs: number;
   isOpen: boolean;
   setNumOfBombsLeft: Function;
+  handleOpen: Function;
+  loc: number[];
 }
 
 interface SquareState {
@@ -57,11 +59,14 @@ class Square extends Component<SquareProps, SquareState> {
   };
 
   render() {
-    const { isOpen } = this.props;
+    const { isOpen, handleOpen, loc } = this.props;
     return (
       <button
-        className="square"
+        className={isOpen ? "square-open" : "square"}
         onContextMenu={this.handleRightClick.bind(this)}
+        onClick={() => {
+          handleOpen(loc[0], loc[1]);
+        }}
       >
         {isOpen ? this.displayOpen() : this.displayHidden()}
       </button>

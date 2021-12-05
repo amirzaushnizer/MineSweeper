@@ -28,6 +28,16 @@
     width: 40px;
     height: 40px;
     display: block;
+
+    background-color: #575b5a;
+}
+
+.square-open {
+    border: 1px solid black;
+
+    width: 40px;
+    height: 40px;
+    display: block;
 }
 
 
