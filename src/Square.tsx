@@ -51,7 +51,7 @@ class Square extends Component<SquareProps, SquareState> {
       this.props.setNumOfBombsLeft(1);
     }
     this.setState((prevState: SquareState) => {
-      return { markState: (prevState.markState + 1) % 3 };
+      return { markState: (prevState.markState + 1) % 3 }; //Hard core discrete math
     });
   };
 
