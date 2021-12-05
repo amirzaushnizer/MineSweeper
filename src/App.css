@@ -29,7 +29,11 @@
     height: 40px;
     display: block;
 
-    background-color: #575b5a;
+    background-color: #8d9191;
+}
+
+.bomb {
+    background-color: #ec7d58;
 }
 
 .square-open {

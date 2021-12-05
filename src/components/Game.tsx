@@ -15,6 +15,13 @@ interface GameProps {
 interface GameState {
   openSquares: number[][];
   bombSquares: boolean[][];
+  gamePhase: GamePhase;
+}
+
+enum GamePhase {
+  Playing = 0,
+  Win = 1,
+  Lose = 2,
 }
 
 class Game extends Component<GameProps, GameState> {
@@ -24,6 +31,7 @@ class Game extends Component<GameProps, GameState> {
     this.state = {
       openSquares: initOpenSquaresMatrix(props.gameSize),
       bombSquares: initBombsMatrix(props.gameSize, props.numOfBombs),
+      gamePhase: GamePhase.Playing,
     };
   }
 
@@ -42,7 +50,8 @@ class Game extends Component<GameProps, GameState> {
     if (newMatrix[row][col] < 0) {
       newMatrix[row][col] = this.calcNumOfAdjacentBombs(row, col);
       if (bombSquares[row][col]) {
-        return; // handle lose
+        this.setState({ gamePhase: GamePhase.Lose });
+        return;
       }
 
       if (newMatrix[row][col] === 0) {

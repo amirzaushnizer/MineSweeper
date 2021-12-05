@@ -42,27 +42,29 @@ class Square extends Component<SquareProps, SquareState> {
   };
 
   handleRightClick = (e: React.MouseEvent) => {
-    const { setNumOfBombsLeft } = this.props;
+    const { setNumOfBombsLeft, numOfAdjacentBombs } = this.props;
     const { markState } = this.state;
 
     e.preventDefault();
-    if (markState === MarkStates.Unmarked) {
-      setNumOfBombsLeft(-1);
+    if (numOfAdjacentBombs < 0) {
+      if (markState === MarkStates.Unmarked) {
+        setNumOfBombsLeft(-1);
+      }
+      if (markState === MarkStates.Marked) {
+        setNumOfBombsLeft(1);
+      }
+      this.setState((prevState: SquareState) => {
+        return { markState: (prevState.markState + 1) % 3 }; //Hardcore discrete math
+      });
     }
-    if (markState === MarkStates.Marked) {
-      setNumOfBombsLeft(1);
-    }
-    this.setState((prevState: SquareState) => {
-      return { markState: (prevState.markState + 1) % 3 }; //Hardcore discrete math
-    });
   };
 
   render() {
-    const { numOfAdjacentBombs, handleOpen, loc } = this.props;
+    const { handleOpen, loc, numOfAdjacentBombs, isBomb } = this.props;
     const isOpen = numOfAdjacentBombs > -1;
     return (
       <button
-        className={isOpen ? "square-open" : "square"}
+        className={isOpen ? `square-open ${isBomb ? "bomb" : ""}` : "square"}
         onContextMenu={this.handleRightClick.bind(this)}
         onClick={() => {
           handleOpen(loc[0], loc[1]);
