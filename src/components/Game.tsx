@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Square from "./Square";
 import {
   getSquareNeighbors,
-  init2DBoolMatrix,
+  initOpenSquaresMatrix,
   initBombsMatrix,
 } from "../utils";
 
@@ -13,7 +13,7 @@ interface GameProps {
 }
 
 interface GameState {
-  openSquares: boolean[][];
+  openSquares: number[][];
   bombSquares: boolean[][];
 }
 
@@ -22,7 +22,7 @@ class Game extends Component<GameProps, GameState> {
     super(props);
 
     this.state = {
-      openSquares: init2DBoolMatrix(props.gameSize),
+      openSquares: initOpenSquaresMatrix(props.gameSize),
       bombSquares: initBombsMatrix(props.gameSize, props.numOfBombs),
     };
   }
@@ -35,17 +35,17 @@ class Game extends Component<GameProps, GameState> {
     ).length;
   };
 
-  openSquare = (row: number, col: number, newMatrix: boolean[][]) => {
+  openSquare = (row: number, col: number, newMatrix: number[][]) => {
     const { bombSquares } = this.state;
     const { gameSize } = this.props;
 
-    if (!newMatrix[row][col]) {
-      newMatrix[row][col] = true;
+    if (newMatrix[row][col] < 0) {
+      newMatrix[row][col] = this.calcNumOfAdjacentBombs(row, col);
       if (bombSquares[row][col]) {
         return; // handle lose
       }
 
-      if (this.calcNumOfAdjacentBombs(row, col) === 0) {
+      if (newMatrix[row][col] === 0) {
         const neighbors = getSquareNeighbors(row, col, gameSize);
         neighbors.forEach((neighbor) => {
           this.openSquare(neighbor[0], neighbor[1], newMatrix);
@@ -77,8 +77,7 @@ class Game extends Component<GameProps, GameState> {
                   key={j}
                   loc={[i, j]}
                   isBomb={bombSquares[i][j]}
-                  numOfAdjacentBombs={this.calcNumOfAdjacentBombs(i, j)}
-                  isOpen={openSquares[i][j]}
+                  numOfAdjacentBombs={openSquares[i][j]}
                   setNumOfBombsLeft={setNumOfBombsLeft}
                   handleOpen={this.handleOpen.bind(this)}
                 />
