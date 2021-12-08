@@ -35,12 +35,13 @@ class Timer extends Component<TimerProps, TimerState> {
 
   render() {
     const { seconds } = this.state;
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
+    const sec = seconds % 60;
+    const minutes = Math.floor(seconds / 60) % 60;
+    const hours = Math.floor(minutes / 60) % 24;
     return (
       <div>
         <h3>Time passed</h3>
-        <h5>{`${hours} : ${minutes}: ${seconds}`}</h5>
+        <h5>{`${hours} : ${minutes}: ${sec}`}</h5>
       </div>
     );
   }
