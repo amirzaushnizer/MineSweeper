@@ -36,12 +36,16 @@
     background-color: #ec7d58;
 }
 
-.square-open {
-    border: 1px solid black;
+.open {
+    background-color: #cbc7c7;
+}
 
-    width: 40px;
-    height: 40px;
-    display: block;
+.game-win {
+    background-color: #bcff85;
+}
+
+.square:disabled {
+    color: black;
 }
 
 

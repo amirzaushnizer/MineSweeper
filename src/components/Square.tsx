@@ -1,11 +1,13 @@
 import React, { Component } from "react";
+import { GamePhase } from "./Game";
 
 interface SquareProps {
   isBomb: boolean;
   numOfAdjacentBombs: number;
   setNumOfBombsLeft: (numToAdd: number) => void;
-  handleOpen: Function;
+  handleOpen: (row: number, col: number) => void;
   loc: number[];
+  gamePhase: GamePhase;
 }
 
 interface SquareState {
@@ -26,7 +28,7 @@ class Square extends Component<SquareProps, SquareState> {
 
   displayOpen = () => {
     const { isBomb, numOfAdjacentBombs } = this.props;
-    return isBomb ? "X" : numOfAdjacentBombs > 0 ? numOfAdjacentBombs : "";
+    return isBomb ? "💣" : numOfAdjacentBombs > 0 ? numOfAdjacentBombs : "";
   };
 
   displayHidden = () => {
@@ -53,24 +55,48 @@ class Square extends Component<SquareProps, SquareState> {
       if (markState === MarkStates.Marked) {
         setNumOfBombsLeft(1);
       }
-        this.setState(
-            { markState: (markState + 1) % 3 } //Hardcore discrete math
-        );
+      this.setState(
+        { markState: (markState + 1) % 3 } //Hardcore discrete math
+      );
     }
   };
 
+  buildSquareClassNameString = () => {
+    const { numOfAdjacentBombs, isBomb, gamePhase } = this.props;
+    const isOpen = numOfAdjacentBombs > -1;
+    let className = "square";
+    if (isOpen) {
+      className += " open";
+    }
+
+    if (gamePhase === GamePhase.Lose && isBomb) {
+      className += " bomb";
+    }
+
+    if (gamePhase === GamePhase.Win) {
+      className += " game-win";
+    }
+
+    return className;
+  };
+
   render() {
-    const { handleOpen, loc, numOfAdjacentBombs, isBomb } = this.props;
+    const { handleOpen, loc, numOfAdjacentBombs, gamePhase } = this.props;
     const isOpen = numOfAdjacentBombs > -1;
     return (
       <button
-        className={isOpen ? `square-open ${isBomb ? "bomb" : ""}` : "square"}
+        className={this.buildSquareClassNameString()}
         onContextMenu={this.handleRightClick}
+        disabled={gamePhase !== GamePhase.Playing}
         onClick={() => {
           handleOpen(loc[0], loc[1]);
         }}
       >
-        {isOpen ? this.displayOpen() : this.displayHidden()}
+        {gamePhase === GamePhase.Lose
+          ? this.displayOpen()
+          : isOpen
+          ? this.displayOpen()
+          : this.displayHidden()}
       </button>
     );
   }
