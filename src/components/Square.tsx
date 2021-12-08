@@ -3,7 +3,7 @@ import React, { Component } from "react";
 interface SquareProps {
   isBomb: boolean;
   numOfAdjacentBombs: number;
-  setNumOfBombsLeft: Function;
+  setNumOfBombsLeft: (numToAdd: number) => void;
 }
 
 interface SquareState {
@@ -50,19 +50,16 @@ class Square extends Component<SquareProps, SquareState> {
     if (markState === MarkStates.Marked) {
       setNumOfBombsLeft(1);
     }
-    this.setState((prevState: SquareState) => {
-      return { markState: (prevState.markState + 1) % 3 }; //Hardcore discrete math
-    });
+    this.setState(
+      { markState: (markState + 1) % 3 } //Hardcore discrete math
+    );
   };
 
   render() {
     const { numOfAdjacentBombs } = this.props;
     const isOpen = numOfAdjacentBombs > -1;
     return (
-      <button
-        className="square"
-        onContextMenu={this.handleRightClick.bind(this)}
-      >
+      <button className="square" onContextMenu={this.handleRightClick}>
         {isOpen ? this.displayOpen() : this.displayHidden()}
       </button>
     );
