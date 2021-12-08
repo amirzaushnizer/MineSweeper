@@ -1,20 +1,44 @@
 import React from "react";
 import "./App.css";
-import BombsCounter from "./BombsCounter";
-import Timer from "./Timer";
-import Game from "./Game";
+import BombsCounter from "./components/BombsCounter";
+import Timer from "./components/Timer";
+import Game from "./components/Game";
 
-class App extends React.Component {
+interface AppState {
+  numOfBombsLeft: number;
+  gameSize: number;
+}
+
+interface AppProps {}
+
+class App extends React.Component<AppProps, AppState> {
+  constructor(props: {}) {
+    super(props);
+    this.state = {
+      numOfBombsLeft: 15,
+      gameSize: 20,
+    };
+  }
+
+  setNumOfBombsLeft = (numToAdd: number) => {
+    this.setState((prevState) => {
+      return { numOfBombsLeft: prevState.numOfBombsLeft + numToAdd };
+    });
+  };
+
   render() {
-    const numOfBombsLeft = 10;
-    const numOfBombs = 10;
-    const gameSize = 30;
+    const { numOfBombsLeft, gameSize } = this.state;
+
     return (
       <div className="app-container">
         <h1>MineSweeper Game</h1>
         <div className="game-container">
           <BombsCounter numOfBombsLeft={numOfBombsLeft} />
-          <Game gameSize={gameSize} numOfBombs={numOfBombs} />
+          <Game
+            gameSize={gameSize}
+            numOfBombs={numOfBombsLeft}
+            setNumOfBombsLeft={this.setNumOfBombsLeft}
+          />
           <Timer />
         </div>
       </div>
