@@ -84,6 +84,7 @@ class Game extends Component<GameProps, GameState> {
     const { numOfBombs } = this.props;
     const numOfClosedSquares = openSquares
       .map((col) => {
+        // NOT STACK OVERFLOW I SWEAR
         return col.reduce((count, cur) => {
           return cur === -1 ? count + 1 : count;
         }, 0);
@@ -92,12 +93,7 @@ class Game extends Component<GameProps, GameState> {
         return sum + cur;
       }, 0);
 
-    console.log(numOfClosedSquares);
-
-    console.log(numOfBombs);
-
     if (numOfClosedSquares === numOfBombs) {
-      console.log("WIN");
       this.setState({ gamePhase: GamePhase.Win });
     }
   };
