@@ -26,6 +26,18 @@ class Square extends Component<SquareProps, SquareState> {
     this.state = { markState: MarkStates.Unmarked };
   }
 
+  componentDidUpdate(prevProps: Readonly<SquareProps>) {
+    const { markState } = this.state;
+    const { numOfAdjacentBombs, setNumOfBombsLeft } = this.props;
+    if (
+      markState === MarkStates.Marked &&
+      prevProps.numOfAdjacentBombs < 0 &&
+      numOfAdjacentBombs >= 0
+    ) {
+      setNumOfBombsLeft(1);
+    }
+  }
+
   displayOpen = () => {
     const { isBomb, numOfAdjacentBombs, gamePhase } = this.props;
     return isBomb
