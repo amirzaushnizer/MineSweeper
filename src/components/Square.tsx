@@ -27,8 +27,14 @@ class Square extends Component<SquareProps, SquareState> {
   }
 
   displayOpen = () => {
-    const { isBomb, numOfAdjacentBombs } = this.props;
-    return isBomb ? "💣" : numOfAdjacentBombs > 0 ? numOfAdjacentBombs : "";
+    const { isBomb, numOfAdjacentBombs, gamePhase } = this.props;
+    return isBomb
+      ? gamePhase === GamePhase.Win
+        ? "✅"
+        : "💣"
+      : numOfAdjacentBombs > 0
+      ? numOfAdjacentBombs
+      : "";
   };
 
   displayHidden = () => {
@@ -92,7 +98,7 @@ class Square extends Component<SquareProps, SquareState> {
           handleOpen(loc[0], loc[1]);
         }}
       >
-        {gamePhase === GamePhase.Lose
+        {gamePhase !== GamePhase.Playing
           ? this.displayOpen()
           : isOpen
           ? this.displayOpen()
