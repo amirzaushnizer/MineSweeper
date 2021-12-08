@@ -3,7 +3,7 @@ import React, { Component } from "react";
 interface SquareProps {
   isBomb: boolean;
   numOfAdjacentBombs: number;
-  setNumOfBombsLeft: Function;
+  setNumOfBombsLeft: (numToAdd: number) => void;
   handleOpen: Function;
   loc: number[];
 }
@@ -53,9 +53,9 @@ class Square extends Component<SquareProps, SquareState> {
       if (markState === MarkStates.Marked) {
         setNumOfBombsLeft(1);
       }
-      this.setState((prevState: SquareState) => {
-        return { markState: (prevState.markState + 1) % 3 }; //Hardcore discrete math
-      });
+        this.setState(
+            { markState: (markState + 1) % 3 } //Hardcore discrete math
+        );
     }
   };
 
@@ -65,7 +65,7 @@ class Square extends Component<SquareProps, SquareState> {
     return (
       <button
         className={isOpen ? `square-open ${isBomb ? "bomb" : ""}` : "square"}
-        onContextMenu={this.handleRightClick.bind(this)}
+        onContextMenu={this.handleRightClick}
         onClick={() => {
           handleOpen(loc[0], loc[1]);
         }}

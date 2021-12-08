@@ -9,7 +9,7 @@ import {
 interface GameProps {
   gameSize: number;
   numOfBombs: number;
-  setNumOfBombsLeft: Function;
+  setNumOfBombsLeft: (numToAdd: number) => void;
 }
 
 interface GameState {
@@ -37,9 +37,10 @@ class Game extends Component<GameProps, GameState> {
 
   calcNumOfAdjacentBombs = (row: number, col: number) => {
     const { gameSize } = this.props;
+    const { bombSquares } = this.state;
     const neighbors = getSquareNeighbors(row, col, gameSize);
     return neighbors.filter(
-      (neighbor) => this.state.bombSquares[neighbor[0]][neighbor[1]]
+      (neighbor) => bombSquares[neighbor[0]][neighbor[1]]
     ).length;
   };
 
