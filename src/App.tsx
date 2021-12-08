@@ -7,9 +7,16 @@ import Game from "./components/Game";
 interface AppState {
   numOfBombsLeft: number;
   gameSize: number;
+  gamePhase: GamePhase;
 }
 
 interface AppProps {}
+
+export enum GamePhase {
+  Playing = 0,
+  Win = 1,
+  Lose = 2,
+}
 
 const NUM_OF_BOMBS = 15;
 
@@ -19,6 +26,7 @@ class App extends React.Component<AppProps, AppState> {
     this.state = {
       numOfBombsLeft: NUM_OF_BOMBS,
       gameSize: 20,
+      gamePhase: GamePhase.Playing,
     };
   }
 
@@ -28,8 +36,12 @@ class App extends React.Component<AppProps, AppState> {
     });
   };
 
+  setGamePhase = (phase: GamePhase) => {
+    this.setState({ gamePhase: phase });
+  };
+
   render() {
-    const { numOfBombsLeft, gameSize } = this.state;
+    const { numOfBombsLeft, gameSize, gamePhase } = this.state;
 
     return (
       <div className="app-container">
@@ -37,11 +49,13 @@ class App extends React.Component<AppProps, AppState> {
         <div className="game-container">
           <BombsCounter numOfBombsLeft={numOfBombsLeft} />
           <Game
+            setPhase={this.setGamePhase}
+            gamePhase={gamePhase}
             gameSize={gameSize}
             numOfBombs={NUM_OF_BOMBS}
             setNumOfBombsLeft={this.setNumOfBombsLeft}
           />
-          <Timer />
+          <Timer gamePhase={gamePhase} />
         </div>
       </div>
     );

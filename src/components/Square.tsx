@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { GamePhase } from "./Game";
+import { GamePhase } from "../App";
 
 interface SquareProps {
   isBomb: boolean;
