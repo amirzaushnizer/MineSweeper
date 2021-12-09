@@ -25,8 +25,17 @@ class Timer extends Component<TimerProps, TimerState> {
     this.setState({ interval: intervalId });
   }
 
+  componentDidUpdate() {
+    const { gamePhase } = this.props;
+    const { interval } = this.state;
+    if (gamePhase !== GamePhase.Playing) {
+      clearInterval(interval);
+    }
+  }
+
   componentWillUnmount() {
-    clearInterval(this.state.interval);
+    const { interval } = this.state;
+    clearInterval(interval);
   }
 
   incSeconds = () => {
