@@ -46,3 +46,11 @@ export const getSquareNeighbors = (
 
   return neighbors;
 };
+
+export const zeroPadNumber = (n: number) => {
+  let output = n.toString();
+  if (output.length < 2) {
+    output = "0" + output;
+  }
+  return output;
+};

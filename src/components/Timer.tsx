@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { GamePhase } from "../App";
+import { zeroPadNumber } from "../utils";
 
 interface TimerProps {
   gamePhase: GamePhase;
@@ -19,11 +20,6 @@ class Timer extends Component<TimerProps, TimerState> {
     };
   }
 
-  incSeconds = () => {
-    const { seconds } = this.state;
-    this.setState({ seconds: seconds + 1 });
-  };
-
   componentDidMount() {
     const intervalId = setInterval(this.incSeconds, 1000);
     this.setState({ interval: intervalId });
@@ -33,6 +29,11 @@ class Timer extends Component<TimerProps, TimerState> {
     clearInterval(this.state.interval);
   }
 
+  incSeconds = () => {
+    const { seconds } = this.state;
+    this.setState({ seconds: seconds + 1 });
+  };
+
   render() {
     const { seconds } = this.state;
     const sec = seconds % 60;
@@ -41,7 +42,9 @@ class Timer extends Component<TimerProps, TimerState> {
     return (
       <div>
         <h3>Time passed</h3>
-        <h5>{`${hours} : ${minutes}: ${sec}`}</h5>
+        <h5>{`${zeroPadNumber(hours)}:${zeroPadNumber(minutes)}:${zeroPadNumber(
+          sec
+        )}`}</h5>
       </div>
     );
   }
