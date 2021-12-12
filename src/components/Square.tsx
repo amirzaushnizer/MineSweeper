@@ -10,7 +10,7 @@ interface SquareProps {
   handleOpen: (row: number, col: number) => void;
   loc: number[];
   gamePhase: GamePhase;
-  initBombs: (loc: number[]) => void;
+  handleFirstClick: (loc: number[]) => void;
 }
 
 interface SquareState {
@@ -80,9 +80,9 @@ class Square extends Component<SquareProps, SquareState> {
   };
 
   handleLeftClick = () => {
-    const { gamePhase, initBombs, loc, handleOpen } = this.props;
+    const { gamePhase, handleFirstClick, loc, handleOpen } = this.props;
     if (gamePhase === GamePhase.FirstClick) {
-      initBombs(loc);
+      handleFirstClick(loc);
     } else {
       handleOpen(loc[0], loc[1]);
     }

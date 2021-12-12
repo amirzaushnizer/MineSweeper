@@ -33,7 +33,7 @@ class Game extends Component<GameProps, GameState> {
     };
   }
 
-  initBombs = (loc: number[]) => {
+  handleFirstMove = (loc: number[]) => {
     const { gameSize, totalNumOfBombs, setPhase } = this.props;
     setPhase(GamePhase.Playing);
     this.setState(
@@ -110,7 +110,7 @@ class Game extends Component<GameProps, GameState> {
             {Array.from(Array(gameSize).keys()).map((j) => {
               return (
                 <Square
-                  initBombs={this.initBombs.bind(this)}
+                  handleFirstClick={this.handleFirstMove}
                   gamePhase={gamePhase}
                   key={j}
                   loc={[i, j]}

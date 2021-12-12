@@ -19,7 +19,7 @@ export enum GamePhase {
   Lose = 3,
 }
 
-const NUM_OF_BOMBS = 15;
+const NUM_OF_BOMBS = 300;
 
 class App extends React.Component<AppProps, AppState> {
   state = {
