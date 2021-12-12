@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { GamePhase } from "../App";
-import { zeroPadNumber } from "../utils";
+import { secondsToTimestamp } from "../utils";
 
 interface TimerProps {
   gamePhase: GamePhase;
@@ -45,15 +45,10 @@ class Timer extends Component<TimerProps, TimerState> {
 
   render() {
     const { seconds } = this.state;
-    const sec = seconds % 60;
-    const minutes = Math.floor(seconds / 60) % 60;
-    const hours = Math.floor(minutes / 60) % 24;
     return (
       <div>
         <h3>Time passed</h3>
-        <h5>{`${zeroPadNumber(hours)}:${zeroPadNumber(minutes)}:${zeroPadNumber(
-          sec
-        )}`}</h5>
+        <h5>{secondsToTimestamp(seconds)}</h5>
       </div>
     );
   }
