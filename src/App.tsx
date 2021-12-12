@@ -52,7 +52,7 @@ class App extends React.Component<AppProps, AppState> {
             setPhase={this.setGamePhase}
             gamePhase={gamePhase}
             gameSize={gameSize}
-            numOfBombs={NUM_OF_BOMBS}
+            totalNumOfBombs={NUM_OF_BOMBS}
             setNumOfBombsLeft={this.setNumOfBombsLeft}
           />
           <Timer gamePhase={gamePhase} />
