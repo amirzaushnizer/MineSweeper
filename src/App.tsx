@@ -38,7 +38,7 @@ class App extends React.Component<AppProps, AppState> {
           <BombsCounter numOfBombsLeft={numOfBombsLeft} />
           <Game
             gameSize={gameSize}
-            numOfBombs={NUM_OF_BOMBS}
+            totalNumOfBombs={NUM_OF_BOMBS}
             setNumOfBombsLeft={this.setNumOfBombsLeft}
           />
           <Timer />

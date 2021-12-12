@@ -28,11 +28,11 @@ class Square extends Component<SquareProps, SquareState> {
 
   componentDidUpdate(prevProps: Readonly<SquareProps>) {
     const { markState } = this.state;
-    const { numOfAdjacentBombs, setNumOfBombsLeft } = this.props;
+    const { setNumOfBombsLeft } = this.props;
     if (
       markState === MarkStates.Marked &&
       prevProps.numOfAdjacentBombs < 0 &&
-      numOfAdjacentBombs >= 0
+      this.isOpen()
     ) {
       setNumOfBombsLeft(1);
     }
@@ -62,11 +62,11 @@ class Square extends Component<SquareProps, SquareState> {
   };
 
   handleRightClick = (e: React.MouseEvent) => {
-    const { setNumOfBombsLeft, numOfAdjacentBombs } = this.props;
+    const { setNumOfBombsLeft } = this.props;
     const { markState } = this.state;
 
     e.preventDefault();
-    if (numOfAdjacentBombs < 0) {
+    if (!this.isOpen()) {
       if (markState === MarkStates.Unmarked) {
         setNumOfBombsLeft(-1);
       }
@@ -79,11 +79,21 @@ class Square extends Component<SquareProps, SquareState> {
     }
   };
 
+  isOpen = () => {
+    const { numOfAdjacentBombs } = this.props;
+    return numOfAdjacentBombs > -1;
+  };
+
+  shouldDisplayOpen = () => {
+    const { gamePhase } = this.props;
+    return gamePhase !== GamePhase.Playing || this.isOpen();
+  };
+
   buildSquareClassNameString = () => {
-    const { numOfAdjacentBombs, isBomb, gamePhase } = this.props;
-    const isOpen = numOfAdjacentBombs > -1;
+    const { isBomb, gamePhase } = this.props;
+
     let className = "square";
-    if (isOpen) {
+    if (this.isOpen()) {
       className += " open";
     }
 
@@ -99,22 +109,20 @@ class Square extends Component<SquareProps, SquareState> {
   };
 
   render() {
-    const { handleOpen, loc, numOfAdjacentBombs, gamePhase } = this.props;
-    const isOpen = numOfAdjacentBombs > -1;
+    const { markState } = this.state;
+    const { handleOpen, loc, gamePhase } = this.props;
     return (
       <button
         className={this.buildSquareClassNameString()}
         onContextMenu={this.handleRightClick}
-        disabled={gamePhase !== GamePhase.Playing}
+        disabled={
+          gamePhase !== GamePhase.Playing || markState === MarkStates.Marked
+        }
         onClick={() => {
           handleOpen(loc[0], loc[1]);
         }}
       >
-        {gamePhase !== GamePhase.Playing
-          ? this.displayOpen()
-          : isOpen
-          ? this.displayOpen()
-          : this.displayHidden()}
+        {this.shouldDisplayOpen() ? this.displayOpen() : this.displayHidden()}
       </button>
     );
   }

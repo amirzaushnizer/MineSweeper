@@ -8,7 +8,7 @@ import {
 
 interface GameProps {
   gameSize: number;
-  numOfBombs: number;
+  totalNumOfBombs: number;
   setNumOfBombsLeft: (numToAdd: number) => void;
 }
 
@@ -30,7 +30,7 @@ class Game extends Component<GameProps, GameState> {
 
     this.state = {
       openSquares: initOpenSquaresMatrix(props.gameSize),
-      bombSquares: initBombsMatrix(props.gameSize, props.numOfBombs),
+      bombSquares: initBombsMatrix(props.gameSize, props.totalNumOfBombs),
       gamePhase: GamePhase.Playing,
     };
   }
@@ -69,11 +69,7 @@ class Game extends Component<GameProps, GameState> {
       return;
     }
 
-    const openSquaresCopy = openSquares.map((arr) => {
-      // create a snapshot of the current state
-      return arr.slice();
-    });
-
+    const openSquaresCopy = openSquares.map((arr) => arr.slice()); // create a snapshot of the current state
     this.openSquare(row, col, openSquaresCopy);
 
     this.setState({ openSquares: openSquaresCopy }, this.isWin); // after snapshot is updated - update the state accordingly.
@@ -81,19 +77,13 @@ class Game extends Component<GameProps, GameState> {
 
   isWin = () => {
     const { openSquares } = this.state;
-    const { numOfBombs } = this.props;
-    const numOfClosedSquares = openSquares
-      .map((col) => {
-        // NOT STACK OVERFLOW I SWEAR
-        return col.reduce((count, cur) => {
-          return cur === -1 ? count + 1 : count;
-        }, 0);
-      })
-      .reduce((sum, cur) => {
-        return sum + cur;
-      }, 0);
+    const { totalNumOfBombs } = this.props;
 
-    if (numOfClosedSquares === numOfBombs) {
+    const numOfClosedSquares = openSquares
+      .flat()
+      .filter((square) => square === -1).length;
+
+    if (numOfClosedSquares === totalNumOfBombs) {
       this.setState({ gamePhase: GamePhase.Win });
     }
   };
