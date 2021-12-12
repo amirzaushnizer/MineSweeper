@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { GamePhase } from "./Game";
+import classNames from "classnames";
 
 interface SquareProps {
   isBomb: boolean;
@@ -92,20 +93,11 @@ class Square extends Component<SquareProps, SquareState> {
   buildSquareClassNameString = () => {
     const { isBomb, gamePhase } = this.props;
 
-    let className = "square";
-    if (this.isOpen()) {
-      className += " open";
-    }
-
-    if (gamePhase === GamePhase.Lose && isBomb) {
-      className += " bomb";
-    }
-
-    if (gamePhase === GamePhase.Win) {
-      className += " game-win";
-    }
-
-    return className;
+    return classNames("square", {
+      open: this.isOpen(),
+      bomb: gamePhase === GamePhase.Lose && isBomb,
+      "game-win": gamePhase === GamePhase.Win,
+    });
   };
 
   render() {
