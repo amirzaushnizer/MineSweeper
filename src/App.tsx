@@ -11,11 +11,13 @@ interface AppState {
 
 interface AppProps {}
 
+const NUM_OF_BOMBS = 15;
+
 class App extends React.Component<AppProps, AppState> {
   constructor(props: {}) {
     super(props);
     this.state = {
-      numOfBombsLeft: 15,
+      numOfBombsLeft: NUM_OF_BOMBS,
       gameSize: 20,
     };
   }
@@ -36,7 +38,7 @@ class App extends React.Component<AppProps, AppState> {
           <BombsCounter numOfBombsLeft={numOfBombsLeft} />
           <Game
             gameSize={gameSize}
-            numOfBombs={numOfBombsLeft}
+            totalNumOfBombs={NUM_OF_BOMBS}
             setNumOfBombsLeft={this.setNumOfBombsLeft}
           />
           <Timer />

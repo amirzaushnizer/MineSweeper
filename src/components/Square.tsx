@@ -1,9 +1,14 @@
 import React, { Component } from "react";
+import { GamePhase } from "./Game";
+import classNames from "classnames";
 
 interface SquareProps {
   isBomb: boolean;
   numOfAdjacentBombs: number;
   setNumOfBombsLeft: (numToAdd: number) => void;
+  handleOpen: (row: number, col: number) => void;
+  loc: number[];
+  gamePhase: GamePhase;
 }
 
 interface SquareState {
@@ -22,9 +27,27 @@ class Square extends Component<SquareProps, SquareState> {
     this.state = { markState: MarkStates.Unmarked };
   }
 
+  componentDidUpdate(prevProps: Readonly<SquareProps>) {
+    const { markState } = this.state;
+    const { setNumOfBombsLeft } = this.props;
+    if (
+      markState === MarkStates.Marked &&
+      prevProps.numOfAdjacentBombs < 0 &&
+      this.isOpen()
+    ) {
+      setNumOfBombsLeft(1);
+    }
+  }
+
   displayOpen = () => {
-    const { isBomb, numOfAdjacentBombs } = this.props;
-    return isBomb ? "X" : numOfAdjacentBombs > 0 ? numOfAdjacentBombs : "";
+    const { isBomb, numOfAdjacentBombs, gamePhase } = this.props;
+    return isBomb
+      ? gamePhase === GamePhase.Win
+        ? "✅"
+        : "💣"
+      : numOfAdjacentBombs > 0
+      ? numOfAdjacentBombs
+      : "";
   };
 
   displayHidden = () => {
@@ -44,23 +67,54 @@ class Square extends Component<SquareProps, SquareState> {
     const { markState } = this.state;
 
     e.preventDefault();
-    if (markState === MarkStates.Unmarked) {
-      setNumOfBombsLeft(-1);
+    if (!this.isOpen()) {
+      if (markState === MarkStates.Unmarked) {
+        setNumOfBombsLeft(-1);
+      }
+      if (markState === MarkStates.Marked) {
+        setNumOfBombsLeft(1);
+      }
+      this.setState(
+        { markState: (markState + 1) % 3 } //Hardcore discrete math
+      );
     }
-    if (markState === MarkStates.Marked) {
-      setNumOfBombsLeft(1);
-    }
-    this.setState(
-      { markState: (markState + 1) % 3 } //Hardcore discrete math
-    );
+  };
+
+  isOpen = () => {
+    const { numOfAdjacentBombs } = this.props;
+    return numOfAdjacentBombs > -1;
+  };
+
+  shouldDisplayOpen = () => {
+    const { gamePhase } = this.props;
+    return gamePhase !== GamePhase.Playing || this.isOpen();
+  };
+
+  buildSquareClassNameString = () => {
+    const { isBomb, gamePhase } = this.props;
+
+    return classNames("square", {
+      open: this.isOpen(),
+      bomb: gamePhase === GamePhase.Lose && isBomb,
+      "game-win": gamePhase === GamePhase.Win,
+    });
   };
 
   render() {
-    const { numOfAdjacentBombs } = this.props;
-    const isOpen = numOfAdjacentBombs > -1;
+    const { markState } = this.state;
+    const { handleOpen, loc, gamePhase } = this.props;
     return (
-      <button className="square" onContextMenu={this.handleRightClick}>
-        {isOpen ? this.displayOpen() : this.displayHidden()}
+      <button
+        className={this.buildSquareClassNameString()}
+        onContextMenu={this.handleRightClick}
+        disabled={
+          gamePhase !== GamePhase.Playing || markState === MarkStates.Marked
+        }
+        onClick={() => {
+          handleOpen(loc[0], loc[1]);
+        }}
+      >
+        {this.shouldDisplayOpen() ? this.displayOpen() : this.displayHidden()}
       </button>
     );
   }

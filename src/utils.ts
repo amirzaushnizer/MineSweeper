@@ -1,7 +1,9 @@
-export const initOpenSquaresMatrix = (gameSize: number) => {
-  return Array(gameSize)
+export const initOpenSquaresMatrix = (size: number) => {
+  return Array(size)
     .fill(-1)
-    .map(() => Array(gameSize).fill(-1));
+    .map(() => {
+      return Array(size).fill(-1);
+    });
 };
 
 export const initBombsMatrix = (gameSize: number, numOfBombs: number) => {

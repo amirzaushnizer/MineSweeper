@@ -1,4 +1,5 @@
 .app-container {
+    font-family: sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -28,6 +29,24 @@
     width: 40px;
     height: 40px;
     display: block;
+
+    background-color: #8d9191;
+}
+
+.bomb {
+    background-color: #ec7d58;
+}
+
+.open {
+    background-color: #cbc7c7;
+}
+
+.game-win {
+    background-color: #bcff85;
+}
+
+.square:disabled {
+    color: black;
 }
 
 
