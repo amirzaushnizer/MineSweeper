@@ -13,9 +13,10 @@ interface AppState {
 interface AppProps {}
 
 export enum GamePhase {
-  Playing = 0,
-  Win = 1,
-  Lose = 2,
+  FirstClick = 0,
+  Playing = 1,
+  Win = 2,
+  Lose = 3,
 }
 
 const NUM_OF_BOMBS = 15;
@@ -26,7 +27,7 @@ class App extends React.Component<AppProps, AppState> {
     this.state = {
       numOfBombsLeft: NUM_OF_BOMBS,
       gameSize: 20,
-      gamePhase: GamePhase.Playing,
+      gamePhase: GamePhase.FirstClick,
     };
   }
 

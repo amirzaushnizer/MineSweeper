@@ -28,7 +28,7 @@ class Timer extends Component<TimerProps, TimerState> {
   componentDidUpdate() {
     const { gamePhase } = this.props;
     const { interval } = this.state;
-    if (gamePhase !== GamePhase.Playing) {
+    if (gamePhase > GamePhase.Playing) {
       clearInterval(interval);
     }
   }
