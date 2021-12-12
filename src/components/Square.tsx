@@ -24,10 +24,7 @@ enum MarkStates {
 }
 
 class Square extends Component<SquareProps, SquareState> {
-  constructor(props: SquareProps) {
-    super(props);
-    this.state = { markState: MarkStates.Unmarked };
-  }
+  state = { markState: MarkStates.Unmarked };
 
   componentDidUpdate(prevProps: Readonly<SquareProps>) {
     const { markState } = this.state;

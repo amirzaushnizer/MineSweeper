@@ -12,13 +12,10 @@ interface TimerState {
 }
 
 class Timer extends Component<TimerProps, TimerState> {
-  constructor(props: TimerProps) {
-    super(props);
-    this.state = {
-      seconds: 0,
-      interval: setTimeout(() => {}, 0),
-    };
-  }
+  state = {
+    seconds: 0,
+    interval: setTimeout(() => {}, 0),
+  };
 
   componentDidMount() {
     const intervalId = setInterval(this.incSeconds, 1000);

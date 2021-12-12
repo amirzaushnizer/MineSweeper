@@ -22,14 +22,11 @@ export enum GamePhase {
 const NUM_OF_BOMBS = 15;
 
 class App extends React.Component<AppProps, AppState> {
-  constructor(props: {}) {
-    super(props);
-    this.state = {
-      numOfBombsLeft: NUM_OF_BOMBS,
-      gameSize: 20,
-      gamePhase: GamePhase.FirstClick,
-    };
-  }
+  state = {
+    numOfBombsLeft: NUM_OF_BOMBS,
+    gameSize: 20,
+    gamePhase: GamePhase.FirstClick,
+  };
 
   setNumOfBombsLeft = (numToAdd: number) => {
     this.setState((prevState) => {
