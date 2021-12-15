@@ -23,8 +23,10 @@ export const initBombsMatrix = (
       const column = Math.floor(Math.random() * gameSize);
       if (
         !(
-          bombsMatrix[row][column] ||
-          (row === firstClickLoc[0] && column === firstClickLoc[1])
+          (
+            bombsMatrix[row][column] ||
+            (row === firstClickLoc[0] && column === firstClickLoc[1])
+          ) // don't put a bomb where the user first clicked.
         )
       ) {
         bombsMatrix[row][column] = true;
