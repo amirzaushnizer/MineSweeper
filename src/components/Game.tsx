@@ -110,7 +110,7 @@ class Game extends Component<GameProps, GameState> {
             {Array.from(Array(gameSize).keys()).map((j) => {
               return (
                 <Square
-                  handleFirstClick={this.handleFirstMove}
+                  handleFirstMove={this.handleFirstMove}
                   gamePhase={gamePhase}
                   key={j}
                   loc={[i, j]}
