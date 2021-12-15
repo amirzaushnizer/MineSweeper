@@ -26,7 +26,8 @@ export const initBombsMatrix = (
           (
             bombsMatrix[row][column] ||
             (row === firstClickLoc[0] && column === firstClickLoc[1])
-          ) // don't put a bomb where the user first clicked.
+          )
+          // don't put a bomb where the user first clicked.
         )
       ) {
         bombsMatrix[row][column] = true;
