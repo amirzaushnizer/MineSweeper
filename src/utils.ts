@@ -46,3 +46,20 @@ export const getSquareNeighbors = (
 
   return neighbors;
 };
+
+export const zeroPadNumber = (n: number) => {
+  let output = n.toString();
+  if (output.length < 2) {
+    output = "0" + output;
+  }
+  return output;
+};
+
+export const secondsToTimestamp = (seconds: number) => {
+  const sec = seconds % 60;
+  const minutes = Math.floor(seconds / 60) % 60;
+  const hours = Math.floor(minutes / 60) % 24;
+  return `${zeroPadNumber(hours)}:${zeroPadNumber(minutes)}:${zeroPadNumber(
+    sec
+  )}`;
+};

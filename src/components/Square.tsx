@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { GamePhase } from "./Game";
+import { GamePhase } from "../App";
+
 import classNames from "classnames";
 
 interface SquareProps {

@@ -2,36 +2,30 @@ import React, { Component } from "react";
 import Square from "./Square";
 import {
   getSquareNeighbors,
-  initOpenSquaresMatrix,
   initBombsMatrix,
+  initOpenSquaresMatrix,
 } from "../utils";
+import { GamePhase } from "../App";
 
 interface GameProps {
   gameSize: number;
   totalNumOfBombs: number;
   setNumOfBombsLeft: (numToAdd: number) => void;
+  gamePhase: GamePhase;
+  setPhase: (phase: GamePhase) => void;
 }
 
 interface GameState {
   openSquares: number[][];
   bombSquares: boolean[][];
-  gamePhase: GamePhase;
-}
-
-export enum GamePhase {
-  Playing = 0,
-  Win = 1,
-  Lose = 2,
 }
 
 class Game extends Component<GameProps, GameState> {
   constructor(props: GameProps) {
     super(props);
-
     this.state = {
       openSquares: initOpenSquaresMatrix(props.gameSize),
       bombSquares: initBombsMatrix(props.gameSize, props.totalNumOfBombs),
-      gamePhase: GamePhase.Playing,
     };
   }
 
@@ -62,10 +56,11 @@ class Game extends Component<GameProps, GameState> {
 
   handleOpen = (row: number, col: number) => {
     const { openSquares, bombSquares } = this.state;
+    const { setPhase } = this.props;
 
     if (bombSquares[row][col]) {
       // if hit a bomb, handle lose
-      this.setState({ gamePhase: GamePhase.Lose });
+      setPhase(GamePhase.Lose);
       return;
     }
 
@@ -77,20 +72,20 @@ class Game extends Component<GameProps, GameState> {
 
   isWin = () => {
     const { openSquares } = this.state;
-    const { totalNumOfBombs } = this.props;
+    const { totalNumOfBombs, setPhase } = this.props;
 
     const numOfClosedSquares = openSquares
       .flat()
       .filter((square) => square === -1).length;
 
     if (numOfClosedSquares === totalNumOfBombs) {
-      this.setState({ gamePhase: GamePhase.Win });
+      setPhase(GamePhase.Win);
     }
   };
 
   render() {
-    const { gameSize, setNumOfBombsLeft } = this.props;
-    const { openSquares, bombSquares, gamePhase } = this.state;
+    const { gameSize, setNumOfBombsLeft, gamePhase } = this.props;
+    const { openSquares, bombSquares } = this.state;
     return (
       <div className="grid-container">
         {Array.from(Array(gameSize).keys()).map((i) => (
