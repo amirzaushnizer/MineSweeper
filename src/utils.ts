@@ -9,7 +9,8 @@ export const initOpenSquaresMatrix = (size: number) => {
 export const initBombsMatrix = (
   gameSize: number,
   numOfBombs: number,
-  firstClickLoc: number[]
+  rowFirstClick: number,
+  colFirstClick: number
 ) => {
   const bombsMatrix = Array(gameSize)
     .fill(false)
@@ -23,8 +24,11 @@ export const initBombsMatrix = (
       const column = Math.floor(Math.random() * gameSize);
       if (
         !(
-          bombsMatrix[row][column] ||
-          (row === firstClickLoc[0] && column === firstClickLoc[1])
+          (
+            bombsMatrix[row][column] ||
+            (row === rowFirstClick && column === colFirstClick)
+          )
+          // don't put a bomb where the user first clicked.
         )
       ) {
         bombsMatrix[row][column] = true;

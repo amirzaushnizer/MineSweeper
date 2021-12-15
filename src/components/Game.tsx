@@ -33,15 +33,15 @@ class Game extends Component<GameProps, GameState> {
     };
   }
 
-  handleFirstMove = (loc: number[]) => {
+  handleFirstMove = (row: number, col: number) => {
     const { gameSize, totalNumOfBombs, setPhase } = this.props;
     setPhase(GamePhase.Playing);
     this.setState(
       {
-        bombSquares: initBombsMatrix(gameSize, totalNumOfBombs, loc),
+        bombSquares: initBombsMatrix(gameSize, totalNumOfBombs, row, col),
       },
       () => {
-        this.handleOpen(loc[0], loc[1]);
+        this.handleOpen(row, col);
       }
     );
   };
@@ -110,7 +110,7 @@ class Game extends Component<GameProps, GameState> {
             {Array.from(Array(gameSize).keys()).map((j) => {
               return (
                 <Square
-                  handleFirstClick={this.handleFirstMove}
+                  handleFirstMove={this.handleFirstMove}
                   gamePhase={gamePhase}
                   key={j}
                   loc={[i, j]}
