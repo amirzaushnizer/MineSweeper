@@ -6,17 +6,21 @@ export const initOpenSquaresMatrix = (size: number) => {
     });
 };
 
+export const initBooleanMatrix = (size: number) => {
+  return Array(size)
+    .fill(false)
+    .map(() => {
+      return Array(size).fill(false);
+    });
+};
+
 export const initBombsMatrix = (
   gameSize: number,
   numOfBombs: number,
   rowFirstClick: number,
   colFirstClick: number
 ) => {
-  const bombsMatrix = Array(gameSize)
-    .fill(false)
-    .map(() => {
-      return Array(gameSize).fill(false);
-    });
+  const bombsMatrix = initBooleanMatrix(gameSize);
   for (let i = 0; i < numOfBombs; i++) {
     let bombInit = false;
     while (!bombInit) {
