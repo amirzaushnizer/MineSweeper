@@ -7,13 +7,13 @@ import {
   MarkAction,
   OpenSquaresAction,
 } from "../actions";
-import { GamePhase } from "../App";
+import { GamePhase } from "../../App";
 import {
   initBombsMatrix,
   initBooleanMatrix,
   initOpenSquaresMatrix,
-} from "../utils";
-import { GAME_SIZE, NUM_OF_BOMBS } from "../constants";
+} from "../../utils";
+import { GAME_SIZE, NUM_OF_BOMBS } from "../../constants";
 
 const numOfBombsLeft = (
   bombsLeft: number = NUM_OF_BOMBS,
@@ -59,6 +59,8 @@ const bombsSquares = (
         action.payload.row,
         action.payload.col
       );
+    default:
+      return bombsSquares;
   }
 };
 

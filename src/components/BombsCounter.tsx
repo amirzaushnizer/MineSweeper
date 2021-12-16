@@ -1,6 +1,10 @@
 import React, { Component } from "react";
+import { RootState } from "../store/store-types";
+import { connect, ConnectedProps } from "react-redux";
 
-class BombsCounter extends Component<{ numOfBombsLeft: number }> {
+type BombsCounterProps = ConnectedProps<typeof connector>;
+
+class BombsCounter extends Component<BombsCounterProps> {
   render() {
     const { numOfBombsLeft } = this.props;
     return (
@@ -12,4 +16,10 @@ class BombsCounter extends Component<{ numOfBombsLeft: number }> {
   }
 }
 
-export default BombsCounter;
+const mapStateToProps = (state: RootState) => ({
+  numOfBombsLeft: state.bombsLeft,
+});
+
+const connector = connect(mapStateToProps);
+
+export default connector(BombsCounter);

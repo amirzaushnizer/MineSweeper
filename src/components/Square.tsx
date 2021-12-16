@@ -2,16 +2,20 @@ import React, { Component } from "react";
 import { GamePhase } from "../App";
 
 import classNames from "classnames";
+import { RootState } from "../store/store-types";
+import { connect, ConnectedProps } from "react-redux";
+import { Dispatch } from "redux";
+import { markSquare, unMarkSquare } from "../store/actions";
 
-interface SquareProps {
-  isBomb: boolean;
-  numOfAdjacentBombs: number;
-  setNumOfBombsLeft: (numToAdd: number) => void;
+interface OwnProps {
   handleOpen: (row: number, col: number) => void;
   loc: number[];
-  gamePhase: GamePhase;
   handleFirstMove: (row: number, col: number) => void;
 }
+
+type ReduxSquareProps = ConnectedProps<typeof connector>;
+
+type SquareProps = OwnProps & ReduxSquareProps;
 
 interface SquareState {
   markState: MarkStates;
@@ -27,14 +31,14 @@ class Square extends Component<SquareProps, SquareState> {
   state = { markState: MarkStates.Unmarked };
 
   componentDidUpdate(prevProps: Readonly<SquareProps>) {
+    const { unmark } = this.props;
     const { markState } = this.state;
-    const { setNumOfBombsLeft } = this.props;
     if (
       markState === MarkStates.Marked &&
       prevProps.numOfAdjacentBombs < 0 &&
       this.isOpen()
     ) {
-      setNumOfBombsLeft(1);
+      unmark();
     }
   }
 
@@ -62,16 +66,16 @@ class Square extends Component<SquareProps, SquareState> {
   };
 
   handleRightClick = (e: React.MouseEvent) => {
-    const { setNumOfBombsLeft } = this.props;
+    const { mark, unmark } = this.props;
     const { markState } = this.state;
 
     e.preventDefault();
     if (!this.isOpen()) {
       if (markState === MarkStates.Unmarked) {
-        setNumOfBombsLeft(-1);
+        mark();
       }
       if (markState === MarkStates.Marked) {
-        setNumOfBombsLeft(1);
+        unmark();
       }
       this.setState(
         { markState: (markState + 1) % 3 } //Hardcore discrete math
@@ -128,4 +132,20 @@ class Square extends Component<SquareProps, SquareState> {
   }
 }
 
-export default Square;
+const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
+  const { loc } = ownProps;
+  return {
+    isBomb: state.bombsSquares[loc[0]][loc[1]],
+    numOfAdjacentBombs: state.openSquares[loc[0]][loc[1]],
+    gamePhase: state.gamePhase,
+  };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  unmark: () => dispatch(unMarkSquare()),
+  mark: () => dispatch(markSquare()),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+export default connector(Square);
