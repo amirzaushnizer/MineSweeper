@@ -6,6 +6,7 @@ import { RootState } from "../store/store-types";
 import { connect, ConnectedProps } from "react-redux";
 import { Dispatch } from "redux";
 import { markSquare, unMarkSquare } from "../store/actions";
+import { isGameOver } from "../utils";
 
 interface OwnProps {
   handleOpen: (row: number, col: number) => void;
@@ -89,9 +90,8 @@ class Square extends Component<SquareProps, SquareState> {
     const col = loc[1];
     if (gamePhase === GamePhase.FirstClick) {
       handleFirstMove(row, col);
-    } else {
-      handleOpen(row, col);
     }
+    handleOpen(row, col);
   };
 
   isOpen = () => {
@@ -101,7 +101,7 @@ class Square extends Component<SquareProps, SquareState> {
 
   shouldDisplayOpen = () => {
     const { gamePhase } = this.props;
-    return gamePhase > GamePhase.Playing || this.isOpen();
+    return isGameOver(gamePhase) || this.isOpen();
   };
 
   buildSquareClassNameString = () => {

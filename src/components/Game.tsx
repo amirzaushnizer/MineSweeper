@@ -3,8 +3,7 @@ import Square from "./Square";
 import { getSquareNeighbors } from "../utils";
 import { connect, ConnectedProps } from "react-redux";
 import { RootState } from "../store/store-types";
-import { Dispatch } from "redux";
-import { firstMove, loseGame, openSquares, winGame } from "../store/actions";
+import { firstMove, loseGame, openSquares } from "../store/actions";
 
 interface GameProps extends ReduxGameProps {
   totalNumOfBombs: number;
@@ -14,7 +13,6 @@ class Game extends Component<GameProps> {
   handleFirstMove = (row: number, col: number) => {
     const { firstMove } = this.props;
     firstMove(row, col);
-    this.handleOpen(row, col);
   };
 
   calcNumOfAdjacentBombs = (row: number, col: number): number => {
@@ -43,32 +41,15 @@ class Game extends Component<GameProps> {
   };
 
   handleOpen = (row: number, col: number) => {
-    const { bombsSquaresMat, lose, openSquaresMat, openSquares } = this.props;
+    const { bombsSquaresMat, lose, openSquares } = this.props;
+
     if (bombsSquaresMat[row][col]) {
       // if hit a bomb, handle lose
       lose();
       return;
     }
 
-    const openSquaresCopy = openSquaresMat.map((arr) => arr.slice()); // create a snapshot of the current state
-    this.openSquare(row, col, openSquaresCopy);
-
-    openSquares(openSquaresCopy);
-    this.isWin();
-
-    // this.setState({ openSquares: openSquaresCopy }, this.isWin); // after snapshot is updated - update the state accordingly.
-  };
-
-  isWin = () => {
-    const { openSquaresMat, totalNumOfBombs, win } = this.props;
-
-    const numOfClosedSquares = openSquaresMat
-      .flat()
-      .filter((square) => square === -1).length;
-
-    if (numOfClosedSquares === totalNumOfBombs) {
-      win();
-    }
+    openSquares(row, col);
   };
 
   render() {
@@ -104,12 +85,10 @@ const mapStateToProps = (state: RootState) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: any) => ({
   firstMove: (row: number, col: number) => dispatch(firstMove(row, col)),
   lose: () => dispatch(loseGame()),
-  openSquares: (openSquaresMat: number[][]) =>
-    dispatch(openSquares(openSquaresMat)),
-  win: () => dispatch(winGame()),
+  openSquares: (row: number, col: number) => dispatch(openSquares(row, col)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

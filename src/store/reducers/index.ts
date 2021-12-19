@@ -15,10 +15,7 @@ import {
 } from "../../utils";
 import { GAME_SIZE, NUM_OF_BOMBS } from "../../constants";
 
-const numOfBombsLeft = (
-  bombsLeft: number = NUM_OF_BOMBS,
-  action: MarkAction
-) => {
+const bombsLeft = (bombsLeft: number = NUM_OF_BOMBS, action: MarkAction) => {
   switch (action.type) {
     case ActionTypes.MarkSquare:
       return bombsLeft - 1;
@@ -68,6 +65,7 @@ const openSquares = (
   openSquares: number[][] = initOpenSquaresMatrix(GAME_SIZE),
   action: OpenSquaresAction
 ) => {
+  // console.log(action.payload);
   switch (action.type) {
     case ActionTypes.OpenSquares:
       return action.payload.openSquares;
@@ -77,7 +75,7 @@ const openSquares = (
 };
 
 export default combineReducers({
-  numOfBombsLeft,
+  bombsLeft,
   gameSize,
   gamePhase,
   bombsSquares,

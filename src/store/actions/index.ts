@@ -1,3 +1,8 @@
+import { Dispatch } from "redux";
+import { RootState } from "../store-types";
+import { openSquare } from "../../utils";
+import { NUM_OF_BOMBS } from "../../constants";
+
 export enum ActionTypes {
   MarkSquare = "MARK_SQUARE",
   UnmarkSquare = "UNMARK_SQUARE",
@@ -6,6 +11,8 @@ export enum ActionTypes {
   LoseGame = "LOSE_GAME",
   WinGame = "WIN_GAME",
 }
+
+type GetState = () => RootState;
 
 export interface MarkAction {
   type: ActionTypes;
@@ -52,15 +59,6 @@ export const firstMove = (row: number, col: number) => {
   };
 };
 
-export const openSquares = (openSquares: number[][]) => {
-  return {
-    type: ActionTypes.OpenSquares,
-    payload: {
-      openSquares,
-    },
-  };
-};
-
 export const loseGame = () => {
   return {
     type: ActionTypes.LoseGame,
@@ -70,5 +68,30 @@ export const loseGame = () => {
 export const winGame = () => {
   return {
     type: ActionTypes.WinGame,
+  };
+};
+
+export const openSquares = (row: number, col: number) => {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const state = getState();
+    const openSquaresCopy = state.openSquares.map((arr) => arr.slice()); // create a snapshot of the current state
+    openSquare(row, col, openSquaresCopy, state.bombsSquares);
+
+    dispatch({
+      type: ActionTypes.OpenSquares,
+      payload: {
+        openSquares: openSquaresCopy,
+      },
+    });
+
+    const numOfClosedSquares = openSquaresCopy
+      .flat()
+      .filter((square) => square === -1).length;
+
+    if (numOfClosedSquares === NUM_OF_BOMBS) {
+      dispatch({
+        type: ActionTypes.WinGame,
+      });
+    }
   };
 };
