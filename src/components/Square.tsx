@@ -10,6 +10,7 @@ interface SquareProps {
   handleOpen: (row: number, col: number) => void;
   loc: number[];
   gamePhase: GamePhase;
+  handleFirstMove: (row: number, col: number) => void;
 }
 
 interface SquareState {
@@ -23,10 +24,7 @@ enum MarkStates {
 }
 
 class Square extends Component<SquareProps, SquareState> {
-  constructor(props: SquareProps) {
-    super(props);
-    this.state = { markState: MarkStates.Unmarked };
-  }
+  state = { markState: MarkStates.Unmarked };
 
   componentDidUpdate(prevProps: Readonly<SquareProps>) {
     const { markState } = this.state;
@@ -81,6 +79,17 @@ class Square extends Component<SquareProps, SquareState> {
     }
   };
 
+  handleLeftClick = () => {
+    const { gamePhase, handleFirstMove, loc, handleOpen } = this.props;
+    const row = loc[0];
+    const col = loc[1];
+    if (gamePhase === GamePhase.FirstClick) {
+      handleFirstMove(row, col);
+    } else {
+      handleOpen(row, col);
+    }
+  };
+
   isOpen = () => {
     const { numOfAdjacentBombs } = this.props;
     return numOfAdjacentBombs > -1;
@@ -88,7 +97,7 @@ class Square extends Component<SquareProps, SquareState> {
 
   shouldDisplayOpen = () => {
     const { gamePhase } = this.props;
-    return gamePhase !== GamePhase.Playing || this.isOpen();
+    return gamePhase > GamePhase.Playing || this.isOpen();
   };
 
   buildSquareClassNameString = () => {
@@ -103,17 +112,15 @@ class Square extends Component<SquareProps, SquareState> {
 
   render() {
     const { markState } = this.state;
-    const { handleOpen, loc, gamePhase } = this.props;
+    const { gamePhase } = this.props;
     return (
       <button
         className={this.buildSquareClassNameString()}
         onContextMenu={this.handleRightClick}
         disabled={
-          gamePhase !== GamePhase.Playing || markState === MarkStates.Marked
+          gamePhase > GamePhase.Playing || markState === MarkStates.Marked
         }
-        onClick={() => {
-          handleOpen(loc[0], loc[1]);
-        }}
+        onClick={this.handleLeftClick}
       >
         {this.shouldDisplayOpen() ? this.displayOpen() : this.displayHidden()}
       </button>

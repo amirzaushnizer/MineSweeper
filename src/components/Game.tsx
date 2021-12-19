@@ -25,9 +25,26 @@ class Game extends Component<GameProps, GameState> {
     super(props);
     this.state = {
       openSquares: initOpenSquaresMatrix(props.gameSize),
-      bombSquares: initBombsMatrix(props.gameSize, props.totalNumOfBombs),
+      bombSquares: Array(props.gameSize)
+        .fill(false)
+        .map(() => {
+          return Array(props.gameSize).fill(false);
+        }),
     };
   }
+
+  handleFirstMove = (row: number, col: number) => {
+    const { gameSize, totalNumOfBombs, setPhase } = this.props;
+    setPhase(GamePhase.Playing);
+    this.setState(
+      {
+        bombSquares: initBombsMatrix(gameSize, totalNumOfBombs, row, col),
+      },
+      () => {
+        this.handleOpen(row, col);
+      }
+    );
+  };
 
   calcNumOfAdjacentBombs = (row: number, col: number): number => {
     const { gameSize } = this.props;
@@ -93,6 +110,7 @@ class Game extends Component<GameProps, GameState> {
             {Array.from(Array(gameSize).keys()).map((j) => {
               return (
                 <Square
+                  handleFirstMove={this.handleFirstMove}
                   gamePhase={gamePhase}
                   key={j}
                   loc={[i, j]}

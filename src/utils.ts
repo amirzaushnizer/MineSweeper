@@ -6,7 +6,12 @@ export const initOpenSquaresMatrix = (size: number) => {
     });
 };
 
-export const initBombsMatrix = (gameSize: number, numOfBombs: number) => {
+export const initBombsMatrix = (
+  gameSize: number,
+  numOfBombs: number,
+  rowFirstClick: number,
+  colFirstClick: number
+) => {
   const bombsMatrix = Array(gameSize)
     .fill(false)
     .map(() => {
@@ -17,7 +22,15 @@ export const initBombsMatrix = (gameSize: number, numOfBombs: number) => {
     while (!bombInit) {
       const row = Math.floor(Math.random() * gameSize);
       const column = Math.floor(Math.random() * gameSize);
-      if (!bombsMatrix[row][column]) {
+      if (
+        !(
+          (
+            bombsMatrix[row][column] ||
+            (row === rowFirstClick && column === colFirstClick)
+          )
+          // don't put a bomb where the user first clicked.
+        )
+      ) {
         bombsMatrix[row][column] = true;
         bombInit = true;
       }
