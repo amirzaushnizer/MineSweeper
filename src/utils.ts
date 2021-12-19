@@ -1,4 +1,5 @@
 import { GamePhase } from "./App";
+import { NUM_OF_BOMBS } from "./constants";
 
 export const initOpenSquaresMatrix = (size: number) => {
   return Array(size)
@@ -131,3 +132,6 @@ export const calcNumOfAdjacentBombs = (
 export const isGameOver = (gamePhase: GamePhase) => {
   return gamePhase === GamePhase.Win || gamePhase === GamePhase.Lose;
 };
+
+export const isWin = (openSquares: number[][]) =>
+  openSquares.flat().filter((square) => square === -1).length === NUM_OF_BOMBS;

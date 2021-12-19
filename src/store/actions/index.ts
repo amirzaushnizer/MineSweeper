@@ -1,7 +1,6 @@
 import { Dispatch } from "redux";
 import { RootState } from "../store-types";
-import { openSquare } from "../../utils";
-import { NUM_OF_BOMBS } from "../../constants";
+import { isWin, openSquare } from "../../utils";
 
 export enum ActionTypes {
   MarkSquare = "MARK_SQUARE",
@@ -65,16 +64,10 @@ export const loseGame = () => {
   };
 };
 
-export const winGame = () => {
-  return {
-    type: ActionTypes.WinGame,
-  };
-};
-
 export const openSquares = (row: number, col: number) => {
   return (dispatch: Dispatch, getState: GetState) => {
     const state = getState();
-    const openSquaresCopy = state.openSquares.map((arr) => arr.slice()); // create a snapshot of the current state
+    const openSquaresCopy = state.openSquares.map((arr) => arr.slice());
     openSquare(row, col, openSquaresCopy, state.bombsSquares);
 
     dispatch({
@@ -84,11 +77,7 @@ export const openSquares = (row: number, col: number) => {
       },
     });
 
-    const numOfClosedSquares = openSquaresCopy
-      .flat()
-      .filter((square) => square === -1).length;
-
-    if (numOfClosedSquares === NUM_OF_BOMBS) {
+    if (isWin(openSquaresCopy)) {
       dispatch({
         type: ActionTypes.WinGame,
       });

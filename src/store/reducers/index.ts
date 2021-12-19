@@ -65,7 +65,6 @@ const openSquares = (
   openSquares: number[][] = initOpenSquaresMatrix(GAME_SIZE),
   action: OpenSquaresAction
 ) => {
-  // console.log(action.payload);
   switch (action.type) {
     case ActionTypes.OpenSquares:
       return action.payload.openSquares;
