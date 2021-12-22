@@ -1,5 +1,5 @@
-import { GamePhase } from "./App";
 import { NUM_OF_BOMBS } from "./constants";
+import { GamePhase } from "./store/store-types";
 
 export const initOpenSquaresMatrix = (size: number) => {
   return Array(size)

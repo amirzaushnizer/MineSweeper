@@ -7,13 +7,13 @@ import {
   MarkAction,
   OpenSquaresAction,
 } from "../actions";
-import { GamePhase } from "../../App";
 import {
   initBombsMatrix,
   initBooleanMatrix,
   initOpenSquaresMatrix,
 } from "../../utils";
 import { GAME_SIZE, NUM_OF_BOMBS } from "../../constants";
+import { GamePhase } from "../store-types";
 
 const bombsLeft = (bombsLeft: number = NUM_OF_BOMBS, action: MarkAction) => {
   switch (action.type) {

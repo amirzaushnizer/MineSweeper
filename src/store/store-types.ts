@@ -1,4 +1,9 @@
-import { GamePhase } from "../App";
+export enum GamePhase {
+  FirstClick = 0,
+  Playing = 1,
+  Win = 2,
+  Lose = 3,
+}
 
 export interface RootState {
   bombsLeft: number;

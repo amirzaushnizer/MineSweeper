@@ -1,20 +1,17 @@
-import React, { Component } from "react";
 import { RootState } from "../store/store-types";
 import { connect, ConnectedProps } from "react-redux";
+import React from "react";
 
 type BombsCounterProps = ConnectedProps<typeof connector>;
 
-class BombsCounter extends Component<BombsCounterProps> {
-  render() {
-    const { numOfBombsLeft } = this.props;
-    return (
-      <div>
-        <h3>Bombs Left</h3>
-        <h5>{numOfBombsLeft}</h5>
-      </div>
-    );
-  }
-}
+const BombsCounter: React.FC<BombsCounterProps> = (props) => {
+  return (
+    <div>
+      <h3>Bombs Left</h3>
+      <h5>{props.numOfBombsLeft}</h5>
+    </div>
+  );
+};
 
 const mapStateToProps = (state: RootState) => ({
   numOfBombsLeft: state.bombsLeft,

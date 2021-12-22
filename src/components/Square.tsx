@@ -1,17 +1,19 @@
 import React, { Component } from "react";
-import { GamePhase } from "../App";
 
 import classNames from "classnames";
-import { RootState } from "../store/store-types";
+import { GamePhase, RootState } from "../store/store-types";
 import { connect, ConnectedProps } from "react-redux";
-import { Dispatch } from "redux";
-import { markSquare, unMarkSquare } from "../store/actions";
+import {
+  firstMove,
+  loseGame,
+  markSquare,
+  openSquares,
+  unMarkSquare,
+} from "../store/actions";
 import { isGameOver } from "../utils";
 
 interface OwnProps {
-  handleOpen: (row: number, col: number) => void;
   loc: number[];
-  handleFirstMove: (row: number, col: number) => void;
 }
 
 type ReduxSquareProps = ConnectedProps<typeof connector>;
@@ -84,14 +86,26 @@ class Square extends Component<SquareProps, SquareState> {
     }
   };
 
+  handleOpen = (row: number, col: number) => {
+    const { bombsSquaresMat, lose, openSquares } = this.props;
+
+    if (bombsSquaresMat[row][col]) {
+      // if hit a bomb, handle lose
+      lose();
+      return;
+    }
+
+    openSquares(row, col);
+  };
+
   handleLeftClick = () => {
-    const { gamePhase, handleFirstMove, loc, handleOpen } = this.props;
+    const { gamePhase, firstMove, loc } = this.props;
     const row = loc[0];
     const col = loc[1];
     if (gamePhase === GamePhase.FirstClick) {
-      handleFirstMove(row, col);
+      firstMove(row, col);
     }
-    handleOpen(row, col);
+    this.handleOpen(row, col);
   };
 
   isOpen = () => {
@@ -138,12 +152,16 @@ const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
     isBomb: state.bombsSquares[loc[0]][loc[1]],
     numOfAdjacentBombs: state.openSquares[loc[0]][loc[1]],
     gamePhase: state.gamePhase,
+    bombsSquaresMat: state.bombsSquares,
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: any) => ({
   unmark: () => dispatch(unMarkSquare()),
   mark: () => dispatch(markSquare()),
+  firstMove: (row: number, col: number) => dispatch(firstMove(row, col)),
+  lose: () => dispatch(loseGame()),
+  openSquares: (row: number, col: number) => dispatch(openSquares(row, col)),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);

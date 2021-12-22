@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { GamePhase } from "../App";
 import { secondsToTimestamp } from "../utils";
-import { RootState } from "../store/store-types";
+import { GamePhase, RootState } from "../store/store-types";
 import { connect, ConnectedProps } from "react-redux";
 
 type TimerProps = ConnectedProps<typeof connector>;
