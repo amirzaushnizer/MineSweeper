@@ -1,17 +1,24 @@
 import React, { Component } from "react";
-import { GamePhase } from "../App";
 
 import classNames from "classnames";
+import { GamePhase, RootState } from "../store/store-types";
+import { connect, ConnectedProps } from "react-redux";
+import {
+  firstMove,
+  loseGame,
+  markSquare,
+  openSquares,
+  unMarkSquare,
+} from "../store/actions";
+import { isGameOver } from "../utils";
 
-interface SquareProps {
-  isBomb: boolean;
-  numOfAdjacentBombs: number;
-  setNumOfBombsLeft: (numToAdd: number) => void;
-  handleOpen: (row: number, col: number) => void;
+interface OwnProps {
   loc: number[];
-  gamePhase: GamePhase;
-  handleFirstMove: (row: number, col: number) => void;
 }
+
+type ReduxSquareProps = ConnectedProps<typeof connector>;
+
+type SquareProps = OwnProps & ReduxSquareProps;
 
 interface SquareState {
   markState: MarkStates;
@@ -27,14 +34,14 @@ class Square extends Component<SquareProps, SquareState> {
   state = { markState: MarkStates.Unmarked };
 
   componentDidUpdate(prevProps: Readonly<SquareProps>) {
+    const { unmark } = this.props;
     const { markState } = this.state;
-    const { setNumOfBombsLeft } = this.props;
     if (
       markState === MarkStates.Marked &&
       prevProps.numOfAdjacentBombs < 0 &&
       this.isOpen()
     ) {
-      setNumOfBombsLeft(1);
+      unmark();
     }
   }
 
@@ -62,16 +69,16 @@ class Square extends Component<SquareProps, SquareState> {
   };
 
   handleRightClick = (e: React.MouseEvent) => {
-    const { setNumOfBombsLeft } = this.props;
+    const { mark, unmark } = this.props;
     const { markState } = this.state;
 
     e.preventDefault();
     if (!this.isOpen()) {
       if (markState === MarkStates.Unmarked) {
-        setNumOfBombsLeft(-1);
+        mark();
       }
       if (markState === MarkStates.Marked) {
-        setNumOfBombsLeft(1);
+        unmark();
       }
       this.setState(
         { markState: (markState + 1) % 3 } //Hardcore discrete math
@@ -79,15 +86,26 @@ class Square extends Component<SquareProps, SquareState> {
     }
   };
 
+  handleOpen = (row: number, col: number) => {
+    const { bombsSquaresMat, lose, openSquares } = this.props;
+
+    if (bombsSquaresMat[row][col]) {
+      // if hit a bomb, handle lose
+      lose();
+      return;
+    }
+
+    openSquares(row, col);
+  };
+
   handleLeftClick = () => {
-    const { gamePhase, handleFirstMove, loc, handleOpen } = this.props;
+    const { gamePhase, firstMove, loc } = this.props;
     const row = loc[0];
     const col = loc[1];
     if (gamePhase === GamePhase.FirstClick) {
-      handleFirstMove(row, col);
-    } else {
-      handleOpen(row, col);
+      firstMove(row, col);
     }
+    this.handleOpen(row, col);
   };
 
   isOpen = () => {
@@ -97,7 +115,7 @@ class Square extends Component<SquareProps, SquareState> {
 
   shouldDisplayOpen = () => {
     const { gamePhase } = this.props;
-    return gamePhase > GamePhase.Playing || this.isOpen();
+    return isGameOver(gamePhase) || this.isOpen();
   };
 
   buildSquareClassNameString = () => {
@@ -128,4 +146,24 @@ class Square extends Component<SquareProps, SquareState> {
   }
 }
 
-export default Square;
+const mapStateToProps = (state: RootState, ownProps: OwnProps) => {
+  const { loc } = ownProps;
+  return {
+    isBomb: state.bombsSquares[loc[0]][loc[1]],
+    numOfAdjacentBombs: state.openSquares[loc[0]][loc[1]],
+    gamePhase: state.gamePhase,
+    bombsSquaresMat: state.bombsSquares,
+  };
+};
+
+const mapDispatchToProps = (dispatch: any) => ({
+  unmark: () => dispatch(unMarkSquare()),
+  mark: () => dispatch(markSquare()),
+  firstMove: (row: number, col: number) => dispatch(firstMove(row, col)),
+  lose: () => dispatch(loseGame()),
+  openSquares: (row: number, col: number) => dispatch(openSquares(row, col)),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+export default connector(Square);

@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import { GamePhase } from "../App";
 import { secondsToTimestamp } from "../utils";
+import { GamePhase, RootState } from "../store/store-types";
+import { connect, ConnectedProps } from "react-redux";
 
-interface TimerProps {
-  gamePhase: GamePhase;
-}
+type TimerProps = ConnectedProps<typeof connector>;
 
 interface TimerState {
   seconds: number;
@@ -51,4 +50,10 @@ class Timer extends Component<TimerProps, TimerState> {
   }
 }
 
-export default Timer;
+const mapStateToProps = (state: RootState) => ({
+  gamePhase: state.gamePhase,
+});
+
+const connector = connect(mapStateToProps);
+
+export default connector(Timer);
